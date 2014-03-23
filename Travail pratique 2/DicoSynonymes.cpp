@@ -358,4 +358,75 @@ namespace TP2
 		_zigZigGauche(K3->droit);
 		_zigZigDroit(K3);
 	}
+
+   /**
+    * \fn const E& Arbre<E>::_min(Noeud*racine)
+    *
+    * \param[in] racine L'adresse du noeud racine du sous-arbre en entr�e
+    * \exception si la racine est vide on lance un logic error
+    * \return le noeudDicoSynonymes le plus a gauche.
+    */
+
+   const DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_min(NoeudDicoSynonymes*racine)
+   {
+      if (racine==0)
+         throw std::logic_error("min: l'arbre (sous-arbre) est vide!\n");
+
+      if (racine->gauche == 0)
+      {
+         return racine;// on retourne le noeud
+      }
+
+      return _min(racine->gauche);
+   }// fin _min
+
+   /**
+    * \fn const DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_max(NoeudDicoSynonymes*racine)
+    *
+    * \param[in] racine L'adresse du noeud racine du sous-arbre en entr�e
+    * \return le noeudDicoSynonymes le plus a droit.
+    */
+   const DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_max(NoeudDicoSynonymes*racine)
+   {
+      if (racine==0)
+         throw std::logic_error("max: l'arbre (sous-arbre) est vide!\n");
+
+      if (racine->droit == 0)
+      {
+         return racine;// on retourne le noeud
+      }
+
+      return _max(racine->droit); // deplacement vers la droite dans l'Arbre
+   }// fin _max
+
+
+  /* template <typename E>
+   E Arbre<E>:: _successeur(Noeud* arb, const E& info) const throw (std::logic_error)
+   {
+      if (cpt == 0)
+         throw std::logic_error("successeur: l'arbre est vide!\n");
+
+      Noeud* sArb = _auxAppartient(racine, info);
+
+      if (sArb == 0)
+         throw std::logic_error("successeur: l'element dont on cherche son successeur n'existe pas!\n");
+
+      if ( info == _max(arb))
+         throw std::logic_error("successeur: l'element est le max dans l'arbre, il n'a pas de successeur!\n");
+
+      if (sArb->droite != 0)
+      {
+         return _min(sArb->droite);
+      }
+      else
+      {
+         Noeud * pere = _parent(arb, sArb);
+         while (pere->data < sArb->data )
+         {
+            pere = _parent(arb,pere);
+         }
+
+         return pere->data;
+      }*/
+   }
 }//Fin du namespace

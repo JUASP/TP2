@@ -158,6 +158,49 @@ public:
 	//De plus, vous devez compl�ter ce fichier DicoSynonymes.h par la sp�cification 
 	//du reste des m�thodes demand�es, voir l'�nonc� de ce travail pratique
 
+
+
+
+	/**
+	*  \fn friend std::ostream& operator <<(std::ostream& out, const DicoSynonymes& d)
+   *  \brief Affiche le dictionnaire de synonymes.
+   *  \brief "Friend" pour permettre d'utiliser les données privées pour faire son travail.
+   *
+   *  \pre DicoSynonymes est valide.
+   *
+   *  \post DicoSynonymes est inchangé.
+   *
+   */
+   /*friend std::ostream& operator <<(std::ostream& out, const DicoSynonymes& d)
+   {
+      if (racine == 0)
+         os << "Le dictionnaire est vide" << std::endl;
+      else
+      {
+       int i=1;
+       for(i; i <= nbRadicaux; i++){
+
+       }
+         if (arb==0)
+               return 0;
+
+            return _nbNoeuds(arb->gauche) + _nbNoeuds(arb->droite) + 1;
+
+
+         int nb = 1;
+      elem courant = l.dernier->suivant;
+      while (courant != l.dernier){
+         os << "Element numero " << nb << ": " << std::endl;
+         os << courant->element << std::endl;
+         courant = courant->suivant;
+         nb++;
+      }
+      os << "Element numero " << nb << ": " << std::endl;
+      os << l.dernier->element;
+      }
+      return os;
+   }*/
+
 private:
 
 
@@ -183,6 +226,47 @@ private:
    int nbRadicaux;													// Nombre de noeuds dans l'arbre
    std::vector< std::list<NoeudDicoSynonymes*> > groupesSynonymes;	// Tableau de groupes de synonymes dont chaque �l�ment est une liste 
 																	// de pointeurs sur des noeuds de l'arbre repr�sentant les radicaux.
+
+
+
+   /**
+    *  \fn const NoeudDicoSynonymes & _min(NoeudDicoSynonymes*)const
+    *  \brief Retourner la valeur minimum dans un sous-arbre
+    *
+    * Fonction auxiliaire (r�cursive)
+    *
+    * \pre Le sous-arbre n'est pas vide
+    * \post Le sous-arbre est inchang�
+    * \exception logic_error si le sous-arbre est vide
+    */
+   const NoeudDicoSynonymes* _min(NoeudDicoSynonymes*);
+
+   /**
+    *  \fn NoeudDicoSynonymes & _max(NoeudDicoSynonymes*)const;
+    *  \brief Retourner la valeur maximum dans un sous-arbre
+    *
+    * Fonction auxiliaire (r�cursive)
+    *
+    * \pre Le sous-arbre n'est pas vide
+    * \post Le sous-arbre est inchang�
+    * \exception logic_error si le sous-arbre est vide
+    */
+   const NoeudDicoSynonymes* _max(NoeudDicoSynonymes*);
+
+   /**
+    *  \fn const NoeudDicoSynonymes & _successeur(NoeudDicoSynonymes*) const
+    *  \brief Retourner le successeur d'un �l�ment dans un sous-arbre
+    *
+    *  Fonction auxiliaire (r�cursive)
+    *
+    * \pre Le sous-arbre n'est pas vide
+    * \pre L'�l�ment fait partie du sous-arbre
+    * \pre L'�l�ment n'est pas le maximum dans le sous-arbre
+    * \post Le sous-arbre est inchang�
+    */
+   const NoeudDicoSynonymes* _successeur(NoeudDicoSynonymes*);
+
+
 
    /**
    	 *  \brief Détruire un sous-arbre
