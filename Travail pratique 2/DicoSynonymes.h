@@ -192,7 +192,7 @@ friend std::ostream& operator <<(std::ostream& out, const DicoSynonymes& d)
               out << std::endl << "Liste des Synonymes le pour sens du groupe " << *intIt << ": ";
 
               for (std::list<NoeudDicoSynonymes*>::const_iterator nodeIt = d.groupesSynonymes[*intIt].begin() ; nodeIt != d.groupesSynonymes[*intIt].end(); ++nodeIt){ // parcours de tous les synonymes
-                 out << *nodeIt << " "  ;
+                 out << (*nodeIt)->radical << " "  ;
               }//fin for  pour la list des synonyme
 
            } // fin for pour les sens des synonymes.
