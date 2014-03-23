@@ -179,7 +179,7 @@ friend std::ostream& operator <<(std::ostream& out, const DicoSynonymes& d)
        NoeudDicoSynonymes * lePlusPetitRadical = d._min(d.racine); // place le pointeur du noeud le plus bas a gauche dans lePlusPetitRadical
        NoeudDicoSynonymes * courant = lePlusPetitRadical;
        int compteur=1;
-       do{// parcours de tous les radical
+       while (compteur <= d.nbRadicaux){// parcours de tous les radical
            out << std::endl << "Radical numero " << compteur << ": " << std::endl;
            out << courant->radical << std::endl;
            out << "Liste des Flexion : " ;
@@ -191,14 +191,19 @@ friend std::ostream& operator <<(std::ostream& out, const DicoSynonymes& d)
            for (std::vector<int>::iterator intIt = courant->appSynonymes.begin() ; intIt != courant->appSynonymes.end(); ++intIt){ // on parcours tous les appSynonymes
               out << std::endl << "Liste des Synonymes le pour sens du groupe " << *intIt << ": ";
 
-              for (std::list<NoeudDicoSynonymes*>::const_iterator nodeIt = d.groupesSynonymes[*intIt].begin() ; nodeIt != d.groupesSynonymes[*intIt].end(); ++nodeIt){ // parcours de tous les flexions
+              for (std::list<NoeudDicoSynonymes*>::const_iterator nodeIt = d.groupesSynonymes[*intIt].begin() ; nodeIt != d.groupesSynonymes[*intIt].end(); ++nodeIt){ // parcours de tous les synonymes
                  out << *nodeIt << " "  ;
               }//fin for  pour la list des synonyme
 
            } // fin for pour les sens des synonymes.
+           if(courant == d._max(d.racine)){ // si notre courant = _max alors apres l'avoir print on sors du do while
+              break;
+           }
+           else{ // sinon on continue de changer le courant pour son successeur
            courant = d._successeur(d.racine,courant); // courant change pour le prochain radical.
            compteur++;
-     }while (courant != d._max(d.racine));// fin while
+           }
+     }// fin while   On reste dans la boucle tant que le compteur est plus petit ou égale au nbRadicaux
    }
    return out;
 }
