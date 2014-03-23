@@ -408,7 +408,7 @@ DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_max(NoeudDicoSynonymes*racine
 
 
 /**
-       * \fn DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_parent(NoeudDicoSynonymes* arb, NoeudDicoSynonymes* sArb)const
+       * \fn DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_parent(NoeudDicoSynonymes* arb, NoeudDicoSynonymes* sArb) const
        *
        * \param[in] arb L'adresse du sous-arbre dans lequel on effectue la recherche du parent
        * \param[in] sArb L'adresse du noeud dont on cherche son parent
@@ -452,7 +452,7 @@ DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_parent(NoeudDicoSynonymes* ar
 
 
 /**
- * \fn DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_successeur(NoeudDicoSynonymes* arb,NoeudDicoSynonymes* sArb)const
+ * \fn DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_successeur(NoeudDicoSynonymes* arb,NoeudDicoSynonymes* sArb) const
  *
  * \param[in] arb Le sous-arbre dans lequel on cherche le successeur
  * \param[in] info La donn�e dont on cherche son successeur

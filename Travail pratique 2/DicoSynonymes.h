@@ -171,35 +171,37 @@ public:
    *  \post DicoSynonymes est inchangé.
    *
    */
-   /*friend std::ostream& operator <<(std::ostream& out, const DicoSynonymes& d)
-   {
-      if (racine == 0)
-         os << "Le dictionnaire est vide" << std::endl;
-      else
-      {
-       int i=1;
-       for(i; i <= nbRadicaux; i++){
+friend std::ostream& operator <<(std::ostream& out, const DicoSynonymes& d)
+{
+   if (d.estVide() == 0)
+      out << "Le dictionnaire est vide" << std::endl;
+   else{
+       NoeudDicoSynonymes * lePlusPetitRadical = d._min(d.racine); // place le pointeur du noeud le plus bas a gauche dans lePlusPetitRadical
+       NoeudDicoSynonymes * courant = lePlusPetitRadical;
+       int compteur=1;
+       do{// parcours de tous les radical
+           out << std::endl << "Radical numero " << compteur << ": " << std::endl;
+           out << courant->radical << std::endl;
+           out << "Liste des Flexion : " ;
 
-       }
-         if (arb==0)
-               return 0;
+           for (std::list<std::string>::iterator it = courant->flexions.begin() ; it != courant->flexions.end(); ++it){ // parcours de tous les flexions
+              out << *it << " "  ;
+           }//fin for
 
-            return _nbNoeuds(arb->gauche) + _nbNoeuds(arb->droite) + 1;
+           for (std::vector<int>::iterator intIt = courant->appSynonymes.begin() ; intIt != courant->appSynonymes.end(); ++intIt){ // on parcours tous les appSynonymes
+              out << std::endl << "Liste des Synonymes le pour sens du groupe " << *intIt << ": ";
 
+              for (std::list<NoeudDicoSynonymes*>::const_iterator nodeIt = d.groupesSynonymes[*intIt].begin() ; nodeIt != d.groupesSynonymes[*intIt].end(); ++nodeIt){ // parcours de tous les flexions
+                 out << *nodeIt << " "  ;
+              }//fin for  pour la list des synonyme
 
-         int nb = 1;
-      elem courant = l.dernier->suivant;
-      while (courant != l.dernier){
-         os << "Element numero " << nb << ": " << std::endl;
-         os << courant->element << std::endl;
-         courant = courant->suivant;
-         nb++;
-      }
-      os << "Element numero " << nb << ": " << std::endl;
-      os << l.dernier->element;
-      }
-      return os;
-   }*/
+           } // fin for pour les sens des synonymes.
+           courant = d._successeur(d.racine,courant); // courant change pour le prochain radical.
+           compteur++;
+     }while (courant != d._max(d.racine));// fin while
+   }
+   return out;
+}
 
 private:
 
