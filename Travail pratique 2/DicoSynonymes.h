@@ -239,7 +239,7 @@ private:
     * \post Le sous-arbre est inchang�
     * \exception logic_error si le sous-arbre est vide
     */
-   const NoeudDicoSynonymes* _min(NoeudDicoSynonymes*);
+   NoeudDicoSynonymes* _min(NoeudDicoSynonymes*) const ;
 
    /**
     *  \fn NoeudDicoSynonymes & _max(NoeudDicoSynonymes*)const;
@@ -251,20 +251,33 @@ private:
     * \post Le sous-arbre est inchang�
     * \exception logic_error si le sous-arbre est vide
     */
-   const NoeudDicoSynonymes* _max(NoeudDicoSynonymes*);
+   NoeudDicoSynonymes* _max(NoeudDicoSynonymes*) const ;
+
 
    /**
-    *  \fn const NoeudDicoSynonymes & _successeur(NoeudDicoSynonymes*) const
+    *  \fn const NoeudDicoSynonymes* _parent(NoeudDicoSynonymes* arb, NoeudDicoSynonymes* sArb)
+    *  \brief Retourner le parent d'un �l�ment dans sous-arbre
+    *
+    * Fonction auxiliaire (r�cursive)
+    *
+    * \pre Le sous-arbre n'est pas vide
+    * \pre L'�l�ment fait partie du sous-arbre
+    * \post L'arbre est inchang�
+    * \exception logic_error si le sous-arbre est vide
+    * \exception logic_error si l'�l�ment n'est pas dans le sous-arbre
+    */
+   NoeudDicoSynonymes* _parent(NoeudDicoSynonymes* arb, NoeudDicoSynonymes* sArb) const ;
+
+   /**
+    *  \fn const NoeudDicoSynonymes* _successeur(NoeudDicoSynonymes*)
     *  \brief Retourner le successeur d'un �l�ment dans un sous-arbre
     *
     *  Fonction auxiliaire (r�cursive)
     *
     * \pre Le sous-arbre n'est pas vide
-    * \pre L'�l�ment fait partie du sous-arbre
-    * \pre L'�l�ment n'est pas le maximum dans le sous-arbre
     * \post Le sous-arbre est inchang�
     */
-   const NoeudDicoSynonymes* _successeur(NoeudDicoSynonymes*);
+   NoeudDicoSynonymes* _successeur(NoeudDicoSynonymes*,NoeudDicoSynonymes*) const ;
 
 
 

@@ -360,73 +360,130 @@ namespace TP2
 	}
 
    /**
-    * \fn const E& Arbre<E>::_min(Noeud*racine)
+    * \fn DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_min(NoeudDicoSynonymes*racine) const
     *
     * \param[in] racine L'adresse du noeud racine du sous-arbre en entr�e
     * \exception si la racine est vide on lance un logic error
     * \return le noeudDicoSynonymes le plus a gauche.
     */
+DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_min(NoeudDicoSynonymes*racine) const
+{
+   if (racine==0)
+      throw std::logic_error("min: l'arbre (sous-arbre) est vide!\n");
 
-   const DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_min(NoeudDicoSynonymes*racine)
+   if (racine->gauche == 0)
    {
-      if (racine==0)
-         throw std::logic_error("min: l'arbre (sous-arbre) est vide!\n");
+      return racine;// on retourne le noeud
+   }
 
-      if (racine->gauche == 0)
-      {
-         return racine;// on retourne le noeud
-      }
+   return _min(racine->gauche);
+}// fin _min
 
-      return _min(racine->gauche);
-   }// fin _min
+
+
+
 
    /**
-    * \fn const DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_max(NoeudDicoSynonymes*racine)
+    * \fn DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_max(NoeudDicoSynonymes*racine) const
     *
     * \param[in] racine L'adresse du noeud racine du sous-arbre en entr�e
     * \return le noeudDicoSynonymes le plus a droit.
     */
-   const DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_max(NoeudDicoSynonymes*racine)
+DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_max(NoeudDicoSynonymes*racine) const
+{
+   if (racine==0)
+      throw std::logic_error("max: l'arbre (sous-arbre) est vide!\n");
+
+   if (racine->droit == 0)
    {
-      if (racine==0)
-         throw std::logic_error("max: l'arbre (sous-arbre) est vide!\n");
-
-      if (racine->droit == 0)
-      {
-         return racine;// on retourne le noeud
-      }
-
-      return _max(racine->droit); // deplacement vers la droite dans l'Arbre
-   }// fin _max
-
-
-  /* template <typename E>
-   E Arbre<E>:: _successeur(Noeud* arb, const E& info) const throw (std::logic_error)
-   {
-      if (cpt == 0)
-         throw std::logic_error("successeur: l'arbre est vide!\n");
-
-      Noeud* sArb = _auxAppartient(racine, info);
-
-      if (sArb == 0)
-         throw std::logic_error("successeur: l'element dont on cherche son successeur n'existe pas!\n");
-
-      if ( info == _max(arb))
-         throw std::logic_error("successeur: l'element est le max dans l'arbre, il n'a pas de successeur!\n");
-
-      if (sArb->droite != 0)
-      {
-         return _min(sArb->droite);
-      }
-      else
-      {
-         Noeud * pere = _parent(arb, sArb);
-         while (pere->data < sArb->data )
-         {
-            pere = _parent(arb,pere);
-         }
-
-         return pere->data;
-      }*/
+      return racine;// on retourne le noeud
    }
+
+   return _max(racine->droit); // deplacement vers la droite dans l'Arbre
+}// fin _max
+
+
+
+
+
+
+/**
+       * \fn DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_parent(NoeudDicoSynonymes* arb, NoeudDicoSynonymes* sArb)const
+       *
+       * \param[in] arb L'adresse du sous-arbre dans lequel on effectue la recherche du parent
+       * \param[in] sArb L'adresse du noeud dont on cherche son parent
+       *
+       * \return L'adresse du noeud parent
+ */
+DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_parent(NoeudDicoSynonymes* arb, NoeudDicoSynonymes* sArb) const
+{
+   if (arb == 0)
+      throw std::logic_error("parent: l'arbre est vide!\n");
+
+   if (sArb == 0)
+      throw std::logic_error("parent: l'element dont on cherche son parent n'existe pas!\n");
+
+   if (sArb == arb)
+      throw std::logic_error("parent: Le parent de la racine d'existe pas!\n");
+
+   if ( sArb->radical < arb-> radical ) // si radical est plus petit que la racine
+   {
+      if (arb->gauche == sArb)
+      {
+         return arb; // on a trouver le parent
+      }else
+      {
+         return _parent(arb->gauche, sArb);// sinon on se déplace vers la gauche
+      }
+   }else // si radical plus grand que celui de la racine
+   {
+      if (arb->droit == sArb) // si le sous arbre droit = notre sous arbre en param
+      {
+         return arb; // on a trouver le parent
+      }else
+      {
+         return _parent(arb->droit, sArb); // sinon on se déplace vers la droite
+      }
+   }
+}// fin _parent
+
+
+
+
+
+/**
+ * \fn DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_successeur(NoeudDicoSynonymes* arb,NoeudDicoSynonymes* sArb)const
+ *
+ * \param[in] arb Le sous-arbre dans lequel on cherche le successeur
+ * \param[in] info La donn�e dont on cherche son successeur
+ * \exception envois un logic_error si une exception survient
+ *
+ * \return E- Le successeur de info
+ */
+DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_successeur(NoeudDicoSynonymes* arb,NoeudDicoSynonymes* sArb) const
+{
+   if (arb == 0)
+      throw std::logic_error("successeur: l'arbre est vide!\n");
+
+   if (sArb == 0)
+      throw std::logic_error("successeur: l'element dont on cherche son successeur n'existe pas!\n");
+
+   if ( sArb->radical == _max(arb)->radical)
+      throw std::logic_error("successeur: l'element est le max dans l'arbre, il n'a pas de successeur!\n");
+
+   if (sArb->droit != 0)
+   {
+      return _min(sArb->droit); // si l'arbre contient un sous arbre droit alors son successeur sera la plus petite valeur dans cette branche la
+   }
+   else
+   {
+      NoeudDicoSynonymes* pere = _parent(arb, sArb);
+      while (pere->radical < sArb->radical )
+      {
+         pere = _parent(arb,pere);
+      }
+
+      return pere;
+   }
+}// fin _successeur
 }//Fin du namespace
