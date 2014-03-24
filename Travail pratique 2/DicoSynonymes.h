@@ -16,6 +16,7 @@
 #include <vector>
 #include <list>
 #include <queue>
+#include <algorithm>
 
 #ifndef _DICOSYNONYMES__H
 #define _DICOSYNONYMES__H

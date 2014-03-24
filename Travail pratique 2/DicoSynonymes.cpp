@@ -730,7 +730,7 @@ std::string DicoSynonymes::rechercherRadical(const std::string& mot) const
  * \param[out] l'intervalle voulu
  *
  */
-DicoSynonymes::std::vector<std::string>  DicoSynonymes::rechercherIntervalle(const std::string& mot1, std::string& mot2) const;
+std::vector<std::string>  DicoSynonymes::rechercherIntervalle(const std::string& mot1, std::string& mot2) const;
 {
    NoeudDicoSynonymes* courant = _auxElement(racine, mot1);  //on fait la recherche du premier element
    std::vector<std::string> vectorRetour;
