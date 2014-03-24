@@ -533,8 +533,8 @@ void DicoSynonymes::ajouterSynonyme(const std::string& motRadical, const std::st
       groupesSynonymes.push_back(nouvelleListe); // ajoute la nouvelle liste au groupe de synonymes
 
       // Ensuite ont met a jour les indices des elements de la liste pour les faire correspondre au bon indice du groupe de synonyme.
-      *numGroupe = groupesSynonymes.size(); // mise a jour de *numGroupe pour qu'il prenne la valeur de la taille de groupesSynonymes.
-      radMotRadical->appSynonymes.push_back(*numGroupe);  // ajoute l'indice du nouveau groupe au radical. l'indice est a groupesSynonymes.size()
+      *numGroupe = (groupesSynonymes.size() -1); // mise a jour de *numGroupe pour qu'il prenne la valeur de la taille de groupesSynonymes -1.
+      radMotRadical->appSynonymes.push_back(*numGroupe);  // ajoute l'indice du nouveau groupe au radical. l'indice est a groupesSynonymes.size() -1
       radSynonyme->appSynonymes.push_back(*numGroupe);   // ajoute l'index du nouveau groupe au radical du synonyme. l'indice est a groupesSynonymes.size()
    }// fin if pour la condition ou numGroupe == -1
    // si l'indice n'est pas -1
@@ -558,8 +558,45 @@ void DicoSynonymes::ajouterSynonyme(const std::string& motRadical, const std::st
       nouveauSynonyme->appSynonymes.push_back(*numGroupe); // on met a jour l'indice du groupe
 
       groupesSynonymes[*numGroupe].push_back(nouveauSynonyme); // puis on ajoute le nouveauSynonyme au groupe de l'indice *numGroupe
-
-
-   }
+   }// fin else
 }// fin ajouterSynonyme
+
+
+
+
+/*
+ *\fn void DicoSynonymes::supprimerSynonyme(const std::string& motRadical, const std::string& motSynonyme, int *numGroupe)
+*\brief     Retirer motSynonyme faisant partie du num�ro de groupe *numGroupe du motRadical.
+*
+*\pre    motRadical et motSynonyme existent et motRadical a une appartenance au groupe numGroupe
+*
+*\post      Le synonyme est enlev� du dictionnaire des synonymes.
+*
+*\exception logic_error si motSynonyme ou motRadical ou numGroupe n'existent pas.
+*/
+void DicoSynonymes::supprimerSynonyme(const std::string& motRadical, const std::string& motSynonyme, int *numGroupe){
+   // Gestion des exceptions
+   NoeudDicoSynonymes* radMotRadical = _auxElement(racine,motRadical);
+   NoeudDicoSynonymes* radSynonyme = _auxElement(racine, motSynonyme);
+   if (radMotRadical == 0){// si on retourne rien ca veux dire que le radical n'existe pas
+      throw std::logic_error("ajouterSynonyme : Le radical " + motRadical + " est inexistant.");
+   }
+
+   if ((unsigned int)(*numGroupe) >= groupesSynonymes.size()){ // si l'indice de *numGroupe est trop grand, on lance un logic_error
+      throw std::logic_error("ajouterSynonyme : Le numéro de groupe est invalide.");
+   }
+   if (radSynonyme == 0){   // on valide l'existance du synonyme
+      throw std::logic_error("supprimerSynonyme : Le synonyme est inexistant.");
+   }
+
+   groupesSynonymes[*numGroupe].remove(radSynonyme);
+   //std::vector<int>::iterator it = find(radSynonyme->appSynonymes.begin(), radSynonyme->appSynonymes.end(), 5);
+   for(std::vector<int>::iterator it = radSynonyme->appSynonymes.begin(); it <=radSynonyme->appSynonymes.end(); it++){ // parcours le vector
+      if(*it == *numGroupe){ // une fois que nous avons une correspondance entre l'iterator et *numGroupe
+         radSynonyme->appSynonymes.erase(it);// on retire la valeur
+         break;// on sort de la boucle
+      }//fin if
+   }// fin for
+
+}
 }//Fin du namespace
