@@ -615,39 +615,60 @@ void DicoSynonymes::valider(std::ofstream & SortieFichier) const{
 
       std::queue<NoeudDicoSynonymes*> fileNode;
       NoeudDicoSynonymes * temp;
+      NoeudDicoSynonymes * courant;
       fileNode.push(racine);
-      std::string hierarchiePair = "1";
-      std::string hierarchieImpair = "1";
+      std::string hierarchie = "1";
       std::string hierarchieGauche = ".1";
       std::string hierarchieDroite = ".2";
+
       while (!fileNode.empty()){ // parcours la file tant quelle n'Est pas vide
+
+          hierarchie = "1"; // on reset notre hierarchie a 1
+          courant = racine; // notre noeud commence toujours sur racine
           temp= fileNode.front();// on met la valeur au debut de la file dans temp
           fileNode.pop(); // puis on retire ce dernier de la file
+
           if(temp->gauche!=0){ // si l'arbre n'est pas vide a gauche on ajoute a la file le sous-arbre gauche
+
              fileNode.push(temp->gauche);
+
           }
           if(temp->droit!=0){// si l'arbre n'est pas vide a gauche on ajoute a la file le sous-arbre droite
+
              fileNode.push(temp->droit);
+
           }
+
           SortieFichier << "Radical: " << temp->radical << " son balancement:  " <<  ( _hauteur(temp->gauche) - _hauteur(temp->droit) );
 
-          if(temp->radical < _parent(racine, temp)->radical){// si temp->radical < que son parent alors on ajoute .1
-             hierarchieImpair = hierarchieImpair+hierarchieGauche;// incremente hierarchieImpair pour le cote gauche
-             SortieFichier<< " hierarchie :" << hierarchieImpair << std::endl;
-          }
-          else if(temp->radical > _parent(racine, temp)->radical){// si temp->radical > que son parent alors on ajoute .2
-             hierarchiePair = hierarchiePair+hierarchieDroite; // incremente hierarchiePair pour le cote droite
-             SortieFichier<< " hierarchie :" << hierarchiePair << std::endl;
-          }
-          else{// il est egal
+
+
+
+          if(temp == racine){
+
              SortieFichier<< " hierarchie :" << "1" << std::endl;
+
           }
+          else {
+             while(courant != temp){ // boucle pour la fabrication de la hierarchie.
 
-      }// fin while
+                if(temp->radical < courant->radical){// si temp->radical < que courant alors on ajoute .1
+                  hierarchie = hierarchie+hierarchieGauche;// incremente hierarchieImpair pour le cote gauche
+                  courant = courant->gauche;// on change courant pour le sous-arbre gauche
+                }
+                else {// si temp->radical > que courant alors on ajoute .2
+                    hierarchie = hierarchie+hierarchieDroite; // incremente hierarchiePair pour le cote droite
+                    courant = courant->droit; // on change courant pour le sous-arbre droit
+                }
+             }// fin while pour le la fabrication de la hierarchie
+             SortieFichier<< " hierarchie :" << hierarchie << std::endl;
+          }// fin else. pour la condition temp==racine
+     }// fin while pour la file
 
-      }
+   }
    else{
          throw std::invalid_argument("sauvegarderSE:le fichier texte n'est pas correctement ouvert");
    }
-}
+} // fin valider
+
 }//Fin du namespace
