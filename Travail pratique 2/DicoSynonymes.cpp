@@ -620,31 +620,29 @@ void DicoSynonymes::valider(std::ofstream & SortieFichier) const{
       std::string hierarchieImpair = "1";
       std::string hierarchieGauche = ".1";
       std::string hierarchieDroite = ".2";
-      int compteur = 0;
       while (!fileNode.empty()){ // parcours la file tant quelle n'Est pas vide
           temp= fileNode.front();// on met la valeur au debut de la file dans temp
           fileNode.pop(); // puis on retire ce dernier de la file
           if(temp->gauche!=0){ // si l'arbre n'est pas vide a gauche on ajoute a la file le sous-arbre gauche
              fileNode.push(temp->gauche);
-
           }
           if(temp->droit!=0){// si l'arbre n'est pas vide a gauche on ajoute a la file le sous-arbre droite
              fileNode.push(temp->droit);
-
           }
           SortieFichier << "Radical: " << temp->radical << " son balancement:  " <<  ( _hauteur(temp->gauche) - _hauteur(temp->droit) );
-          if(compteur ==0){
-             SortieFichier<< " hierarchie :" << "1" << std::endl;
-          }
-          else if(compteur%2 == 0){// si le compteur est pair alors
-             hierarchiePair = hierarchiePair+hierarchieDroite; // incremente hierarchiePair pour le cote droite
-             SortieFichier<< " hierarchie :" << hierarchiePair << std::endl;
-          }
-          else{
+
+          if(temp->radical < _parent(racine, temp)->radical){// si temp->radical < que son parent alors on ajoute .1
              hierarchieImpair = hierarchieImpair+hierarchieGauche;// incremente hierarchieImpair pour le cote gauche
              SortieFichier<< " hierarchie :" << hierarchieImpair << std::endl;
           }
-          compteur++;
+          else if(temp->radical > _parent(racine, temp)->radical){// si temp->radical > que son parent alors on ajoute .2
+             hierarchiePair = hierarchiePair+hierarchieDroite; // incremente hierarchiePair pour le cote droite
+             SortieFichier<< " hierarchie :" << hierarchiePair << std::endl;
+          }
+          else{// il est egal
+             SortieFichier<< " hierarchie :" << "1" << std::endl;
+          }
+
       }// fin while
 
       }
