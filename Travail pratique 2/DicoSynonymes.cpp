@@ -486,4 +486,80 @@ DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_successeur(NoeudDicoSynonymes
       return pere;
    }
 }// fin _successeur
+
+
+
+
+/*
+* \fn void DicoSynonymes::ajouterSynonyme(const std::string& motRadical, const std::string& motSynonyme, int *numGroupe)
+*\brief     Ajouter un synonyme (motSynonyme) d'un radical (motRadical) � un de ses groupes de synonymes.
+*
+*\pre    Le radical se trouve d�j� dans le dictionnaire
+*\       Il y a suffisament de m�moire
+*
+*\post      Le synonyme est ajout� au dictionnaire des synonymes
+*\       Si *numGroupe vaut �1, le synonyme est ajout� dans un nouveau groupe de synonymes
+*\       et retourne le num�ro de ce nouveau groupe dans *numgroupe.
+*
+*\exception bad_alloc si il n'y a pas suffisament de m�moire
+*\exception logic_error si motSynonyme est d�j� dans la liste des synonymes du motRadical
+*\exception logic_error si numGroupe n'est pas correct ou motRadical n'existe pas.
+*/
+void DicoSynonymes::ajouterSynonyme(const std::string& motRadical, const std::string& motSynonyme, int *numGroupe){
+
+   // Gestion des exceptions
+   NoeudDicoSynonymes* radMotRadical = _auxElement(racine,motRadical);
+   if (radMotRadical == 0){// si on retourne rien ca veux dire que le radical n'existe pas
+      throw std::logic_error("ajouterSynonyme : Le radical " + motRadical + " est inexistant.");
+   }
+
+   if ((unsigned int)(*numGroupe) >= groupesSynonymes.size()){ // si l'indice de *numGroupe est trop grand, on lance un logic_error
+      throw std::logic_error("ajouterSynonyme : Le numéro de groupe est invalide.");
+   }
+
+
+
+
+   // Gestion des différents cas
+   if (*numGroupe == -1){ //Si *numGroupe vaut -1, le synonyme est ajoute dans un nouveau groupe de synonymes
+      NoeudDicoSynonymes* radSynonyme = _auxElement(racine,motSynonyme); // on chercher le radical du synonyme
+      if (radSynonyme == 0){ // on vérifie si le synonyme existe deja
+         ajouterRadical(motSynonyme); // on ajoute le synonyme
+      } // fin if
+      std::list<NoeudDicoSynonymes*> nouvelleListe; // creation d'une nouvelle liste, pour l'indice -1 qui sera changer plus loin
+      nouvelleListe.push_back(radMotRadical); // ajoute radMotRadical au nouveau groupe.
+      nouvelleListe.push_back(radSynonyme);  // ajoute le radSynonyme au nouveau groupe.
+
+      groupesSynonymes.push_back(nouvelleListe); // ajoute la nouvelle liste au groupe de synonymes
+
+      // Ensuite ont met a jour les indices des elements de la liste pour les faire correspondre au bon indice du groupe de synonyme.
+      *numGroupe = groupesSynonymes.size(); // mise a jour de *numGroupe pour qu'il prenne la valeur de la taille de groupesSynonymes.
+      radMotRadical->appSynonymes.push_back(*numGroupe);  // ajoute l'indice du nouveau groupe au radical. l'indice est a groupesSynonymes.size()
+      radSynonyme->appSynonymes.push_back(*numGroupe);   // ajoute l'index du nouveau groupe au radical du synonyme. l'indice est a groupesSynonymes.size()
+   }// fin if pour la condition ou numGroupe == -1
+   // si l'indice n'est pas -1
+   else{
+
+     // On prouve la derniere exception
+      bool trouver = false;
+      for (std::list<NoeudDicoSynonymes*>::const_iterator nodeIt = groupesSynonymes[*numGroupe].begin() ; nodeIt != groupesSynonymes[*numGroupe].end(); ++nodeIt){ // parcours de tous les synonymes
+         if((*nodeIt)->radical == motSynonyme ){
+            trouver = true;
+            break; // on sort du for
+         }
+      }//fin for  pour la list des synonyme
+      if (trouver == true){
+         throw std::logic_error("ajouterSynonyme : motSynonyme est deja dans la liste des synonymes du motRadical");
+      }// fin if exception
+
+      //on peut maintenant faire l'ajout
+      ajouterRadical(motSynonyme); // le synonyme s'ajoute aux radical de l'arbre.
+      NoeudDicoSynonymes* nouveauSynonyme = _auxElement(racine,motSynonyme); //on donne le pointeur du nouveau Radical
+      nouveauSynonyme->appSynonymes.push_back(*numGroupe); // on met a jour l'indice du groupe
+
+      groupesSynonymes[*numGroupe].push_back(nouveauSynonyme); // puis on ajoute le nouveauSynonyme au groupe de l'indice *numGroupe
+
+
+   }
+}// fin ajouterSynonyme
 }//Fin du namespace
