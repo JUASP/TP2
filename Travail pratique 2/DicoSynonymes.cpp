@@ -671,4 +671,106 @@ void DicoSynonymes::valider(std::ofstream & SortieFichier) const{
    }
 } // fin valider
 
+
+
+
+/*
+ * \fn std::string rechercherRadical(const std::string& mot) const throw (std::logic_error)
+ *
+ * \param[in] le mot dont on recherche le radical
+ *
+ * \param[out] le radical recherche
+ *
+ */
+std::string DicoSynonymes::rechercherRadical(const std::string& mot) const
+{
+   NoeudDicoSynonymes* courant = racine;
+   std::string radicalPlusSemblable; //chaine de caractere representant le radical le plus semblable
+   float tauxSimilarite = 0; //le plus haut taux de similitude
+
+   while (courant->radical != mot)
+   {
+      if (courant->radical < mot && courant->gauche != 0) //on cherche le radical dans l'arbre de gauche
+      {
+         float tauxSimilariteCourant = _similitude(mot, courant->radical); //on regarde le taux de similitude entre le mot rechercher et le radical courant
+
+         if(tauxSimilariteCourant > tauxSimilarite)  //si le taux de similitude du radical courant est plus grand que le plus haut precedent
+         {                                           //alors on met a jour le taux de similarite et on remplace le radical par le nouveau plus semblable et on continue
+            tauxSimilarite = tauxSimilariteCourant;
+            radicalPlusSemblable = courant->radical;
+         }
+         courant = courant->gauche;
+      }
+      else if (courant->radical > mot && courant->droit != 0) //on cherche le radical dans l'arbre de droit
+      {
+         float tauxSimilariteCourant = _similitude(mot, courant->radical);
+
+         if(tauxSimilariteCourant > tauxSimilarite)
+         {
+            tauxSimilarite = tauxSimilariteCourant;
+            radicalPlusSemblable = courant->radical;
+         }
+         courant = courant->droit;
+      }
+      else throw std::logic_error("Le mot n'existe pas");
+   }
+
+   return radicalPlusSemblable; // on retourne le radical le plus semblable
+}
+
+
+
+
+
+/*
+ * \fn std::vector<std::string> DicoSynonymes::rechercherIntervalle(const std::string& mot1, const std::string& mot2) const
+ *
+ * \param[in] les mots delimitant l'intervalle
+ *
+ * \param[out] l'intervalle voulu
+ *
+ */
+DicoSynonymes::std::vector<std::string>  DicoSynonymes::rechercherIntervalle(const std::string& mot1, std::string& mot2) const;
+{
+   NoeudDicoSynonymes* courant = _auxElement(racine, mot1);  //on fait la recherche du premier element
+   std::vector<std::string> vectorRetour;
+
+   while(courant->radical != mot2)
+   {
+      vectorRetour.push_back(courant->radical); //tant que l'on a pas atteind le mot final, on ajoute les mots intermediaires dans le vecteur de retour
+      courant = _successeur(racine,courant);
+   }
+
+   return vectorRetour;
+}
+
+
+
+
+
+/*
+ * \fn float _similitude(const std::string& mot1, const std::string& mot2) const
+ *
+ * \param[in] mot1 le premier mot a compare
+ * \param[in] mot2 le deuxieme mot a compare
+ *
+ * return le pourcetage de similitude entre les deux mots
+ *
+ */
+float DicoSynonymes::_similitude(const std::string& mot1, const std::string& mot2) const
+{
+   int list1Length, list2Length, commonItemLength; // les items contenants les longueurs des differentes chaines de caracteres
+
+   std::string string_intersection; //chaine de caractere contenant l'intersection du radical et du mot
+
+   std::set_intersection(mot1.begin(), mot1.end(), mot2.begin(), mot2.end(), std::back_inserter(string_intersection));
+
+   list1Length = mot1.length();
+   list2Length = mot2.length();
+   commonItemLength = string_intersection.length();
+
+   float similarity = 100 * (commonItemLength * 2) / (list1Length + list2Length); // on calcul le pourcentage de similarite entre les 2 mots
+
+   return similarity;
+}
 }//Fin du namespace

@@ -162,6 +162,26 @@ public:
 
 
 
+	/*
+	 * \fn std::vector<std::string>  rechercherIntervalle(const std::string& mot1, std::string& mot2) const
+	 *
+	 * \param[in] les mots delimitant l'intervalle
+	 *
+	 * \param[out] l'intervalle voulu
+	 *
+	 */
+	std::vector<std::string>  rechercherIntervalle(const std::string& mot1, std::string& mot2) const;
+
+	/*
+	 * \fn std::string rechercherRadical(const std::string& mot) const
+	 *
+	 * \param[in] le mot dont on recherche le radical
+	 *
+	 * \param[out] le radical recherche
+	 *
+	 */
+	std::string rechercherRadical(const std::string& mot) const;
+
    /**
    *  \fn  void valider(std::ofstream & SortieFichier) const;
    *  \brief Cette méthode devra écrire (dans un fichier de type texte) tous les nœuds de l’arbre non vide niveau par
@@ -300,6 +320,16 @@ private:
     */
    NoeudDicoSynonymes* _successeur(NoeudDicoSynonymes*,NoeudDicoSynonymes*) const ;
 
+   /*
+    * \fn float _similitude(const std::string& mot1, const std::string& mot2) const
+    *
+    * \param[in] mot1 le premier mot a compare
+    * \param[in] mot2 le deuxieme mot a compare
+    *
+    * return le pourcetage de similitude entre les deux mots
+    *
+    */
+   float _similitude(const std::string& mot1, const std::string& mot2) const;
 
 
    /**
