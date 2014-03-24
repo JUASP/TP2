@@ -10,6 +10,7 @@
  */
 
 #include "DicoSynonymes.h"
+
 //vous pouvez inclure d'autres librairies si c'est n�cessaire
 
 namespace TP2
@@ -543,7 +544,7 @@ void DicoSynonymes::ajouterSynonyme(const std::string& motRadical, const std::st
      // On prouve la derniere exception
       bool trouver = false;
       for (std::list<NoeudDicoSynonymes*>::const_iterator nodeIt = groupesSynonymes[*numGroupe].begin() ; nodeIt != groupesSynonymes[*numGroupe].end(); ++nodeIt){ // parcours de tous les synonymes
-         if((*nodeIt)->radical == motSynonyme ){
+         if((*nodeIt)->radical == motSynonyme ){//motSynonyme est deja dans la liste des synonymes du motRadical
             trouver = true;
             break; // on sort du for
          }
@@ -590,13 +591,65 @@ void DicoSynonymes::supprimerSynonyme(const std::string& motRadical, const std::
    }
 
    groupesSynonymes[*numGroupe].remove(radSynonyme);
-   //std::vector<int>::iterator it = find(radSynonyme->appSynonymes.begin(), radSynonyme->appSynonymes.end(), 5);
+   //std::vector<int>::iterator it = find(radSynonyme->appSynonymes.begin(), radSynonyme->appSynonymes.end(), *numGroupe); // ne fonctionne pas -_- http://stackoverflow.com/questions/571394/how-to-find-an-item-in-a-stdvector
    for(std::vector<int>::iterator it = radSynonyme->appSynonymes.begin(); it <=radSynonyme->appSynonymes.end(); it++){ // parcours le vector
       if(*it == *numGroupe){ // une fois que nous avons une correspondance entre l'iterator et *numGroupe
          radSynonyme->appSynonymes.erase(it);// on retire la valeur
          break;// on sort de la boucle
       }//fin if
    }// fin for
+}// fin supprimerSynonyme
 
+
+
+/**
+*  \fn  void DicoSynonymes::valider(std::ofstream & SortieFichier) const
+*  \brief Cette méthode devra écrire (dans un fichier de type texte) tous les nœuds de l’arbre non vide niveau par niveau
+*  \pre SortieFichier est valide.
+*
+*  \post DicoSynonymes est inchangé et l'ecriture a fonctionner.
+*
+*/
+void DicoSynonymes::valider(std::ofstream & SortieFichier) const{
+   if(SortieFichier){
+
+      std::queue<NoeudDicoSynonymes*> fileNode;
+      NoeudDicoSynonymes * temp;
+      fileNode.push(racine);
+      std::string hierarchiePair = "1";
+      std::string hierarchieImpair = "1";
+      std::string hierarchieGauche = ".1";
+      std::string hierarchieDroite = ".2";
+      int compteur = 0;
+      while (!fileNode.empty()){ // parcours la file tant quelle n'Est pas vide
+          temp= fileNode.front();// on met la valeur au debut de la file dans temp
+          fileNode.pop(); // puis on retire ce dernier de la file
+          if(temp->gauche!=0){ // si l'arbre n'est pas vide a gauche on ajoute a la file le sous-arbre gauche
+             fileNode.push(temp->gauche);
+
+          }
+          if(temp->droit!=0){// si l'arbre n'est pas vide a gauche on ajoute a la file le sous-arbre droite
+             fileNode.push(temp->droit);
+
+          }
+          SortieFichier << "Radical: " << temp->radical << " son balancement:  " <<  ( _hauteur(temp->gauche) - _hauteur(temp->droit) );
+          if(compteur ==0){
+             SortieFichier<< " hierarchie :" << "1" << std::endl;
+          }
+          else if(compteur%2 == 0){// si le compteur est pair alors
+             hierarchiePair = hierarchiePair+hierarchieDroite; // incremente hierarchiePair pour le cote droite
+             SortieFichier<< " hierarchie :" << hierarchiePair << std::endl;
+          }
+          else{
+             hierarchieImpair = hierarchieImpair+hierarchieGauche;// incremente hierarchieImpair pour le cote gauche
+             SortieFichier<< " hierarchie :" << hierarchieImpair << std::endl;
+          }
+          compteur++;
+      }// fin while
+
+      }
+   else{
+         throw std::invalid_argument("sauvegarderSE:le fichier texte n'est pas correctement ouvert");
+   }
 }
 }//Fin du namespace

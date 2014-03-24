@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <queue>
 
 #ifndef _DICOSYNONYMES__H
 #define _DICOSYNONYMES__H
@@ -160,6 +161,19 @@ public:
 
 
 
+
+   /**
+   *  \fn  void valider(std::ofstream & SortieFichier) const;
+   *  \brief Cette méthode devra écrire (dans un fichier de type texte) tous les nœuds de l’arbre non vide niveau par
+niveau
+   *
+   *
+   *  \pre SortieFichier est valide.
+   *
+   *  \post DicoSynonymes est inchangé et l'ecriture a fonctionner.
+   *
+   */
+	void valider(std::ofstream & SortieFichier) const;
 
 	/**
 	*  \fn friend std::ostream& operator <<(std::ostream& out, const DicoSynonymes& d)
