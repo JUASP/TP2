@@ -245,7 +245,7 @@ namespace TP2
 		}
 	}
 
-	DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_auxElement(NoeudDicoSynonymes* el, const std::string r)
+	DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_auxElement(NoeudDicoSynonymes* el, const std::string r) const
 	{
 
 		/*if (el == 0)
@@ -730,9 +730,10 @@ std::string DicoSynonymes::rechercherRadical(const std::string& mot) const
  * \param[out] l'intervalle voulu
  *
  */
-std::vector<std::string>  DicoSynonymes::rechercherIntervalle(const std::string& mot1, std::string& mot2) const;
+std::vector<std::string>  DicoSynonymes::rechercherIntervalle(const std::string& mot1, std::string& mot2) const
 {
-   NoeudDicoSynonymes* courant = _auxElement(racine, mot1);  //on fait la recherche du premier element
+   NoeudDicoSynonymes* courant;
+   courant = _auxElement(racine, mot1);  //on fait la recherche du premier element
    std::vector<std::string> vectorRetour;
 
    while(courant->radical != mot2)

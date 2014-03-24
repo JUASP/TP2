@@ -345,7 +345,7 @@ private:
    	 *
    	 * \post Le noeud est retourné
    	 */
-   NoeudDicoSynonymes* _auxElement(NoeudDicoSynonymes* el, const std::string r);
+   NoeudDicoSynonymes* _auxElement(NoeudDicoSynonymes* el, const std::string r) const;
 
    /**
    	 *  \brief Insérer élément dans un sous-arbre
