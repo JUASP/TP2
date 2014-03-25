@@ -124,10 +124,11 @@ namespace TP2
 			nbRadicaux++;
 			return;
 		}
-		if (arbre->radical > motRadical)
+		int comparaison = motRadical.compare(arbre->radical);
+		if (comparaison < 0)
 		{
 			_auxAjouterRadical(arbre->gauche, motRadical);
-			if (arbre->gauche->hauteur - arbre->droit->hauteur == 2)
+			if ((arbre->gauche->hauteur - arbre->droit->hauteur) == 2)
 			{
 				if (arbre->gauche->radical > motRadical) _zigZigGauche(arbre);
 				else _zigZagGauche(arbre);
@@ -140,7 +141,7 @@ namespace TP2
 		else
 		{
 			_auxAjouterRadical(arbre->droit, motRadical);
-			if (arbre->droit->hauteur - arbre->gauche->hauteur == 2)
+			if ((arbre->droit->hauteur - arbre->gauche->hauteur) == 2)
 			{
 				if (arbre->droit->radical <= motRadical) _zigZigDroit(arbre);
 				else _zigZagDroit(arbre);
@@ -477,8 +478,8 @@ DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_parent(NoeudDicoSynonymes* ar
 
    if (sArb == arb)
       throw std::logic_error("parent: Le parent de la racine d'existe pas!\n");
-
-   if ( sArb->radical < arb-> radical ) // si radical est plus petit que la racine
+   int comparaison = sArb->radical.compare(arb->radical);
+   if ( comparaison < 0 ) // si radical est plus petit que la racine
    {
       if (arb->gauche == sArb)
       {
@@ -530,7 +531,8 @@ DicoSynonymes::NoeudDicoSynonymes* DicoSynonymes::_successeur(NoeudDicoSynonymes
    else
    {
       NoeudDicoSynonymes* pere = _parent(arb, sArb);
-      while (pere->radical < sArb->radical )
+      int comparaison = pere->radical.compare(sArb->radical);
+      while (comparaison < 0 )
       {
          pere = _parent(arb,pere);
       }
@@ -701,9 +703,10 @@ void DicoSynonymes::valider(std::ofstream & SortieFichier) const{
 
           }
           else {
+             int comparaison;
              while(courant != temp){ // boucle pour la fabrication de la hierarchie.
-
-                if(temp->radical < courant->radical){// si temp->radical < que courant alors on ajoute .1
+                comparaison = temp->radical.compare(courant->radical);
+                if(comparaison < 0){// si temp->radical < que courant alors on ajoute .1
                   hierarchie = hierarchie+hierarchieGauche;// incremente hierarchieImpair pour le cote gauche
                   courant = courant->gauche;// on change courant pour le sous-arbre gauche
                 }
