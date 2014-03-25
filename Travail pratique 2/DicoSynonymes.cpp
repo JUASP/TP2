@@ -32,14 +32,65 @@ namespace TP2
 	 */
 	DicoSynonymes::DicoSynonymes(std::ifstream& fichier)
 	{
-		//incomplete
+	   racine = 0;
+	   nbRadicaux = 0;
 
-		if (!fichier.is_open())
+      // Gestion des erreurs
+		if (!fichier.is_open()) // le fichier n'est pas ouvert
 		{
-			racine = 0;
-			nbRadicaux = 0;
+			return;
 		}
-	}
+	   if(fichier.peek() == std::ifstream::traits_type::eof()){
+		      throw std::logic_error("DicoSynonymes:logic_error le fichier texte est vide!");
+		}
+
+
+	   if(fichier){
+         std::string ligne; // variable local qui va stocker le getline
+         std::string radSynonyme;
+         std::string synonyme;
+         std::string flexion;
+         std::string dernierRad;
+         int compteur = 0;
+         int numGroupe = -1; // valeur par default si aucun groupe n'est associer
+         bool debutSyn = false;
+         while (getline(fichier, ligne)){
+            if (!ligne.empty() && ligne[ligne.size() - 1] == '\r'){ // supprime les sauts de ligne(lu)
+                ligne.erase(ligne.size() - 1);
+            }
+            if(ligne == "$"){ // indice qui signal le debut des groupes de synonyme.
+               debutSyn = true;
+               continue;
+            } // fin if $
+
+            //cin >> only reads input up to the first white-space character.
+            if(debutSyn){ // apres avoir lu le $ on peut travailler ici
+               std::stringstream steam1(ligne); // Felix math, jai pas trop compris comment ca fonctionnais lol mais vive google XD
+               steam1 >> radSynonyme;  //on lit jusqua premier " " et puisque le premier est le radical on le met ds une variable apart
+               numGroupe = 1;
+               while (steam1 >> synonyme)// a chaque " " ss s'arrete et donne la valeur a synonyme. jusqua ce quil n'y a plus rien a lire
+               {
+                   ajouterSynonyme(radSynonyme, synonyme, &numGroupe);
+               }
+            }// fin if pour les synonymes
+            else {
+               if(compteur%2==0){// cas ou notre compteur est en position pour les Radical ( pair)
+                  ajouterRadical(ligne); // on ajoute notre radical
+                  dernierRad = ligne; // on garde en memoire notre radical pour la flexion.
+                  compteur++;
+               }
+               else{ // cas ou notre compteur est impair donc en position pour les flexions.
+                  std::stringstream stream2(ligne);
+                  while (stream2 >> flexion)// parcours tous les mots de la ligne
+                  {
+                      ajouterFlexion(dernierRad, flexion);
+                  }
+                  compteur++; // on increment le compteur pour le remettre pair
+               }// fin du else qui gère les cas ou compteur est impair
+            }// fin du else qui gère le cas ou on nas pas vu de $
+         }// fin du while qui parcours le fichier
+	   }// fin du if qui gere le fichier ouvert
+	}// fin du constructeur
 
 	/**
 	 * \fn DicoSynonymes::~DicoSynonymes()

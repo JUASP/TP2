@@ -17,6 +17,7 @@
 #include <list>
 #include <queue>
 #include <algorithm>
+#include <sstream>
 
 #ifndef _DICOSYNONYMES__H
 #define _DICOSYNONYMES__H
