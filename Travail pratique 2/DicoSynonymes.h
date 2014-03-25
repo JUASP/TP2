@@ -209,7 +209,7 @@ niveau
    */
 friend std::ostream& operator <<(std::ostream& out, const DicoSynonymes& d)
 {
-   if (d.estVide() == 0)
+   if (d.estVide())
       out << "Le dictionnaire est vide" << std::endl;
    else{
        NoeudDicoSynonymes * lePlusPetitRadical = d._min(d.racine); // place le pointeur du noeud le plus bas a gauche dans lePlusPetitRadical
@@ -355,7 +355,7 @@ private:
    	 *
    	 * \post Le sous-arbre contient un élément de plus
    	 */
-   void _auxAjouterRadical(NoeudDicoSynonymes* arbre, const std::string& motRadical);
+   void _auxAjouterRadical(NoeudDicoSynonymes* &arbre, const std::string& motRadical);
 
    /**
    	 *  \brief Enlever un élément dans un sous-arbre
@@ -364,14 +364,14 @@ private:
    	 *
    	 * \post Le sous-arbre contient un élément de moins
    	 */
-   void _auxSupprimerRadical(NoeudDicoSynonymes* arbre, const std::string& motRadical);
+   void _auxSupprimerRadical(NoeudDicoSynonymes* &arbre, const std::string& motRadical);
 
    /**
    	 *  \brief Enlever un élément dans une liste
    	 *
    	 * \post La liste contient un élément de moins
    	 */
-   void _auxSupprimerFlexion(NoeudDicoSynonymes* arbre, const std::string& motRadical, const std::string& motFlexion);
+   void _auxSupprimerFlexion(NoeudDicoSynonymes* &arbre, const std::string& motRadical, const std::string& motFlexion);
 
    /**
    	 *  \brief Enlever l'élément minimum dans un sous-arbre
@@ -380,7 +380,7 @@ private:
    	 *
    	 * \post Le sous-arbre contient un élément de moins
    	 */
-   void _auxRetireMin(NoeudDicoSynonymes* arbre) const throw(std::logic_error);
+   void _auxRetireMin(NoeudDicoSynonymes* &arbre) const throw(std::logic_error);
 
    /**
    	 *  \brief Simple rotation - Déséquilibre gauche-gauche

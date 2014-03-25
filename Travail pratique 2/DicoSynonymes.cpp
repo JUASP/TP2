@@ -116,7 +116,7 @@ namespace TP2
 	 * \param[in] arbre le sous-arbre à traiter
 	 * \param[in] motRadical le radical à ajouter au sous-arbre
 	 */
-	void DicoSynonymes::_auxAjouterRadical(NoeudDicoSynonymes* arbre, const std::string& motRadical)
+	void DicoSynonymes::_auxAjouterRadical(NoeudDicoSynonymes* &arbre, const std::string& motRadical)
 	{
 		if (arbre == 0)
 		{
@@ -181,7 +181,7 @@ namespace TP2
 	 * \param[in] arbre le sous-arbre à traiter
 	 * \param[in] motRadical le radical à supprimer
 	 */
-	void DicoSynonymes::_auxSupprimerRadical(NoeudDicoSynonymes *arbre, const std::string& motRadical)
+	void DicoSynonymes::_auxSupprimerRadical(NoeudDicoSynonymes* &arbre, const std::string& motRadical)
 	{
 		if (arbre->radical > motRadical)
 		{
@@ -236,7 +236,7 @@ namespace TP2
 	 * \param[in] motRadical le radical à traiter
 	 * \param[in] motFlexion la flexion à supprimer
 	 */
-	void DicoSynonymes::_auxSupprimerFlexion(NoeudDicoSynonymes* arbre, const std::string& motRadical, const std::string& motFlexion)
+	void DicoSynonymes::_auxSupprimerFlexion(NoeudDicoSynonymes* &arbre, const std::string& motRadical, const std::string& motFlexion)
 	{
 		if (arbre->radical == motRadical)
 		{
@@ -267,7 +267,7 @@ namespace TP2
 	 *
 	 * \param[in] arbre le sous-arbre à traiter
 	 */
-	void DicoSynonymes::_auxRetireMin(NoeudDicoSynonymes* arbre) const throw(std::logic_error)
+	void DicoSynonymes::_auxRetireMin(NoeudDicoSynonymes* &arbre) const throw(std::logic_error)
 	{
 		if (arbre == 0) throw std::logic_error("_auxRetireMin: probleme pointeur NULL");
 		else if (arbre->gauche != 0) _auxRetireMin(arbre->gauche);
